@@ -7,6 +7,36 @@ import { URL_API } from "../api.js"
 function Login() {
     const [usuario, setUsuario] = useState('')
     const [senha, setSenha] = useState('')
+    const [erro, setErro] = useState('')
+    const navegar = useNavigate() // permite trocar de pagina pelo codigo.
+
+    async function entrar(evento) {
+        evento.preventDefault();
+
+        try {
+            const resposta = await fetch(`${URL_API}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    usuario: usuario,
+                    senha: senha
+                })
+            });
+
+            const dados = await resposta.json();
+
+            if (!resposta.ok) {
+                setErro(dados.erro);
+                return;
+            }
+
+            localStorage.setItem('token', dados.token);
+            navegar('/');
+
+        } catch (erro) {
+            setErro('Não consegui falar com o servidor. Ele está ligado?');
+        }
+    } // FECHAMENTO DA FUNÇÃO ENTRAR
 
     return (
         <main className="container">
@@ -18,7 +48,7 @@ function Login() {
                                 <Camera size={36} /> Instaclone
                             </h1>
                             <p>Entre para ver as fotos da galera.</p>
-                            <form className="d-grid gap-3">
+                            <form onSubmit={entrar} className="d-grid gap-3">
                                 <input
                                     className="form-control"
                                     type="text"
@@ -41,6 +71,11 @@ function Login() {
                                     }
                                     }
                                 />
+                                {erro && (
+                                    <div className="alert theme-danger" role="alert">
+                                        <TriangleAlert size={18} /> {erro}
+                                    </div>
+                                )}
                                 <button className="btn-solid theme-primary" type="submit">
                                     <LogIn size={18} /> Entrar
                                 </button>
