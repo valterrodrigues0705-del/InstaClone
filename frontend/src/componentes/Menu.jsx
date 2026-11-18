@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Camera, House, User, Settings, LogOut } from 'lucide-react'
+import Erro from '../componentes/Erro.jsx'
 
 // A barra de cima, com a marca e os links para as páginas.
 function Menu() {

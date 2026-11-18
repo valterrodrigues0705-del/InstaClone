@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { RefreshCw, Images, TriangleAlert } from 'lucide-react'
 import { chamarApi } from '../api.js'
+import Post from '../componentes/Post.jsx'
+import Erro from '../componentes/Erro.jsx'
 
 
 function Feed() {
@@ -28,17 +30,14 @@ function Feed() {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-5">
-                <h1 className="fs-xl mb-0">Feed</h1>
+                <h1 className="fs-xl mb-0">Feed ({posts.length})</h1>
                 <button className="btn-outline theme-secondary btn-sm" onClick={carregarFeed}>
                     <RefreshCw size={18} /> Atualizar
                 </button>
             </div>
-
-            {erro && (
-                <div className="alert theme-danger" role="alert">
-                    <TriangleAlert size={18} /> {erro}
-                </div>
-            )}
+            <>
+                <Erro erro={erro} />
+            </>
             {!carregando && !erro && posts.length === 0 && (
                 <article className="card">
                     <div className="card-body text-center fg-3">
@@ -48,14 +47,9 @@ function Feed() {
                 </article>
             )}
 
-            {
-                posts.map((post) => (
-                    <>
-                        (<p key={post.id}>{post.autor}:{post.legenda}</p>)
-                        
-                    </>
-                ))
-            }
+            {posts.map((post) => (
+                <Post key={post.id} post={post} />
+            ))}
         </>
     )
 }
